@@ -72,3 +72,4 @@ https://www.leboncoin.fr/recherche?category=9&text=paris&locations=Paris__48.857
 * [Testing spring batch](https://docs.spring.io/spring-batch/docs/current/reference/html/testing.html)
 * [JSoup](https://jsoup.org/)
 * [Spring boot batch](https://spring.io/guides/gs/batch-processing/)
+* [Spring cloud task example](https://github.com/spring-cloud/spring-cloud-task/tree/master/spring-cloud-task-samples/batch-job)

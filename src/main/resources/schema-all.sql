@@ -7,7 +7,7 @@ CREATE TABLE property  (
     description VARCHAR(500),
     nb_room BIGINT,
     nb_bedroom BIGINT,
-    size BIGINT,
+    size DOUBLE,
     detail_url VARCHAR(500),
     provider VARCHAR(100),
     provider_id VARCHAR(100)

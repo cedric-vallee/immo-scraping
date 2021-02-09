@@ -12,7 +12,7 @@ public class Property {
     private String description;
     private int nbRoom;
     private int nbBedroom; 
-    private int size;
+    private double size;
     private String detailUrl;
     private String provider;
     private String providerId;

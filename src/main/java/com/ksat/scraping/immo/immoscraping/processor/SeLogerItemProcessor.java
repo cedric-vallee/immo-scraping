@@ -5,8 +5,12 @@ import com.ksat.scraping.immo.immoscraping.dto.Property;
 import org.jsoup.nodes.Element;
 import org.springframework.batch.item.ItemProcessor;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SeLogerItemProcessor implements ItemProcessor<Element, Property> {
 
+    private static final String EURO = "€";
     private static final String SIZE = "m²";
     private static final String BEDROOM = "ch";
     private static final String ROOM = "p";
@@ -32,7 +36,7 @@ public class SeLogerItemProcessor implements ItemProcessor<Element, Property> {
     // position are moving, so we need a field catcher
     private int extractedPrice(Element propertie) {
         String value = propertie.getElementsByAttributeValue(DATA_TEST,"sl.price-label").text();
-        return Integer.parseInt(value.replace("€", "").replace(" ", ""));
+        return Integer.parseInt(value.replace(EURO, "").replace(" ", ""));
     }
 
     private int extractedRooms(Element propertie) {
@@ -43,8 +47,14 @@ public class SeLogerItemProcessor implements ItemProcessor<Element, Property> {
         return extractField(propertie, BEDROOM);
     }
 
-    private int extractedSize(Element propertie) {
-        return extractField(propertie, SIZE);
+    private double extractedSize(Element propertie) {
+        double extractField = 0;
+        try{
+            extractField = extractFieldDouble(propertie, SIZE);
+        } catch( Exception e){
+            log.warn("no field {} found for property {} \n generated following error : {}", SIZE, propertie.toString(), e.getMessage());
+        }
+        return extractField;
     }
 
     private int  extractField(Element propertie, String field) {
@@ -54,5 +64,14 @@ public class SeLogerItemProcessor implements ItemProcessor<Element, Property> {
             value = propertie.getElementsByAttributeValue(DATA_TEST, SL_TAGS).first().child(i++).text();
         }while(!value.contains(field));
         return Integer.parseInt(value.replace(field,"").replace(" ", ""));
+    }
+
+    private double  extractFieldDouble(Element propertie, String field) {
+        String value;
+        int i = 0;
+        do{
+            value = propertie.getElementsByAttributeValue(DATA_TEST, SL_TAGS).first().child(i++).text();
+        }while(!value.contains(field));
+        return Double.parseDouble(value.replace(field,"").replace(" ", "").replace(",", "."));
     }
 }
